@@ -1,0 +1,46 @@
+<!-- templates/admin_edit_user.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit User Profile</title>
+</head>
+<body>
+    <h1>Edit Profile for {{ user.first_name.capitalize() }} {{ user.last_name.capitalize() }}</h1>
+    <form method="POST">
+        <label>First Name:</label><br>
+        <input type="text" name="first_name" value="{{ user.first_name }}"><br><br>
+
+        <label>Last Name:</label><br>
+        <input type="text" name="last_name" value="{{ user.last_name }}"><br><br>
+
+        <label>Bio:</label><br>
+        <textarea name="bio">{{ user.bio }}</textarea><br><br>
+
+        <label>Orientation:</label><br>
+        <select name="orientation">
+            <option value="straight" {% if user.orientation == 'straight' %}selected{% endif %}>Straight</option>
+            <option value="gay" {% if user.orientation == 'gay' %}selected{% endif %}>Gay</option>
+            <option value="bisexual" {% if user.orientation == 'bisexual' %}selected{% endif %}>Bisexual</option>
+        </select><br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+    <br>
+    <a href="/admin/dashboard">Back to Dashboard</a>
+
+    <h2>{{ user.first_name.capitalize() }} {{ user.last_name.capitalize() }}'s Uploaded Photos</h2>
+    {% if photos %}
+        {% for photo in photos %}
+            <div style="margin-bottom: 10px;">
+                <img src="{{ url_for('uploadedFile', filename=photo) }}" width="200"><br>
+                <form action="{{ url_for('adminDeletePhoto', userId=user.id) }}" method="POST" style="display:inline;">
+                    <input type="hidden" name="photo_url" value="{{ photo }}">
+                    <button type="submit" onclick="return confirm('Delete this photo?');">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No photos uploaded.</p>
+    {% endif %}
+</body>
+</html>

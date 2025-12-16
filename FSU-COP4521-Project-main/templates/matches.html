@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Matches</title>
+</head>
+<body>
+    <h1>Your Matches</h1>
+
+    {% if matches %}
+        <ul>
+            {% for match in matches %}
+                <li>
+                    <div style="margin-bottom: 20px;">
+                        <strong>{{ match.first_name.capitalize() }}</strong> ({{ match.age }} yrs, {{ match.gender.capitalize() }}, {{ match.orientation.capitalize() }})<br>
+                        <a href="{{ url_for('viewProfile', userId=match.user_id, source='matches') }}">View Profile</a>
+                        <a href="{{ url_for('chat', matchId=match.match_id) }}">Message</a>
+
+                        <form action="/unmatch_user" method="POST" style="display:inline;">
+                            <input type="hidden" name="match_id" value="{{ match.match_id }}">
+                            <button type="submit">Unmatch</button>
+                        </form>    
+
+                        <button type="button" onclick="toggleReportForm({{ match.user_id }})">Report</button>
+                        <form id="report-form-{{ match.user_id }}" action="/report_user" method="POST" style="display:none; margin-top: 10px;">
+                            <input type="hidden" name="reported_id" value="{{ match.user_id }}">
+                            <input type="hidden" name="source_page" value="matches">
+                            <input type="text" name="reason" placeholder="Reason for report" required>
+                            <button type="submit">Submit Report</button>
+                        </form>
+
+                        <form action="/block_user" method="POST" style="display:inline;">
+                            <input type="hidden" name="blocked_id" value="{{ match.user_id }}">
+                            <input type="hidden" name="source_page" value="matches">
+                            <button type="submit">Block</button>
+                        </form>    
+
+                    </div>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no matches yet.</p>
+    {% endif %}
+    <br>
+    <a href="/">Back to Home</a>
+
+    <!-- AI PROVIDED -->
+    <script>
+        function toggleReportForm(userId)
+        {
+            const form = document.getElementById("report-form-" + userId);
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>

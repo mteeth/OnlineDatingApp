@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dating Site</title>
+</head>
+<body>
+    <h1>Welcome to the Dating Site</h1>
+    <p>
+        {% if session.get("user_id") %}
+            <a href="/browse">Start Matching</a>    |
+            <a href="/likes">See Who Likes You</a>  |
+            <a href="/matches">View Your Matches</a>    |
+            <a href="/profile/{{ session.user_id }}">My Profile</a>  |
+            <a href="/blockedUsers">View Blocked Users</a> |
+            {% if session["role"] == "moderator" %}
+                <a href="{{ url_for('moderatorDashboard') }}">Moderator Dashboard</a> |
+            {% endif %}
+
+            {% if session["role"] == "admin" %}
+                <a href="{{ url_for('adminDashboard') }}">Admin Dashboard</a> |
+            {% endif %}
+
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/register">Register</a> |
+            <a href="/login">Login</a>  |
+            <a href="/guest_browse">Browse as a Guest</a>
+        {% endif %}
+    </p>
+
+    {% if not session.get("user_id") %}
+        <p>
+            <em>You may browse profiles as a guest, but you must be a registered user to start matching and interacting.</em>
+        </p>
+    {% endif %}
+</body>
+</html>

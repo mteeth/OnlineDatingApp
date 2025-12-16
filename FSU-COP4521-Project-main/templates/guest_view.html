@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guest Profile View</title>
+</head>
+<body>
+    {% if user %}
+        <h1>{{ user.first_name.capitalize() }}'s Profile</h1>
+
+        <p><strong>Age:</strong> {{ user.age }}</p>
+        <p><strong>Gender:</strong> {{ user.gender.capitalize() }}</p>
+        <p><strong>Orientation:</strong> {{ user.orientation.capitalize() }}</p>
+        <p><strong>Bio:</strong> {{ user.bio }}</p>
+        <p><strong>Interests:</strong> {{ user.interests }}</p>
+
+        <h3>Photos:</h3>
+        {% if photos %}
+            {% for photo in photos %}
+                <img src="{{ url_for('uploadedFile', filename=photo) }}" alt="Photo" width="200">
+            {% endfor %}
+        {% else %}
+            <p>No photos available.</p>
+        {% endif %}
+
+        <br><br>
+        <a href="{{ url_for('guestBrowse') }}">View Another Random Profile</a> |
+        <a href="{{ url_for('home') }}">Return to Home</a>
+
+    {% else %}
+        <h2>No more profiles to browse!</h2>
+        <form method="POST" action="{{ url_for('refresh_guest') }}">
+            <button type="submit">Refresh Available Profiles</button>
+        </form>
+        <p><a href="{{ url_for('home') }}">Return to Home</a></p>
+    {% endif %}
+</body>
+</html>

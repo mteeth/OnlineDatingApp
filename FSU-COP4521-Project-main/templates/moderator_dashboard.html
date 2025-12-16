@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Moderator Dashboard</title>
+</head>
+<body>
+    <h1>Moderator Dashboard</h1>
+
+    {% if reports %}
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Report ID</th>
+                    <th>Reporter</th>
+                    <th>Reporter User</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>{{ report.report_id }}</td>
+                        <td>{{ report.reporter_name }}</td>
+                        <td>{{ report.reported_name }}</td>
+                        <td>{{ report.reason }}</td>
+                        <td>{{ report.created_at }}</td>
+                        <td>
+                            {% if report.reported_banned %}
+                                <form action="/moderator/unban_user/{{ report.reported_id }}" method="POST" style="display:inline;">
+                                    <button type="submit">Unban</button>
+                                </form>
+                            {% else %}
+                                <form action="/moderator/ban_user/{{ report.reported_id }}" method="POST" style="display:inline;">
+                                    <button type="submit">Ban</button>
+                                </form>
+                            {% endif %}
+                            <form action="/moderator/delete_report/{{ report.report_id }}" method="POST" style="display:inline;">
+                                <button type="submit">Dismiss Report</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}    
+            </tbody>
+        </table>
+    {% else %}
+        <p>No reports found.</p>
+    {% endif %}
+    
+    <br><a href="/">Return to Home</a>
+</body>
+</html>

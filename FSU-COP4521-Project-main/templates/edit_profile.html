@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+    <h1>Edit Your Profile</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        <label>Bio:</label><br>
+        <textarea name="bio" rows="4" cols="50">{{ user.bio or '' }}</textarea><br><br>
+
+        <label>Sexual Orientation:</label>
+        <select name="orientation" required>
+            <option value="">--Select--</option>
+            <option value="straight" {% if user.orientation == 'straight' %}selected{% endif %}>Straight</option>
+            <option value="gay" {% if user.orientation == 'gay' %}selected{% endif %}>Gay</option>
+            <option value="bisexual" {% if user.orientation == 'bisexual' %}selected{% endif %}>Bisexual</option>
+        </select><br><br>
+
+        <label>Select your interests:</label> <br>
+        {% for interest in presetInterests %}
+            <input type="checkbox" name="interests" value="{{ interest }}"
+            {% if interest in userInterests %}checked{% endif %}>
+            {{ interest }}
+            <br>
+        {% endfor %}
+        <br>
+        <label>Upload Photos:</label><br>
+        <input type="file" name="photos" multiple><br><br>
+
+        <input type="submit" value="Save Profile">
+    </form>
+
+    <h2>Your Uploaded Photos</h2>
+    {% if photos %}
+        {% for photo in photos %}
+            <div style="margin-bottom: 10px;">
+                <img src="{{ url_for('uploadedFile', filename=photo) }}" width="200"><br>
+                <form action="{{ url_for('deletePhoto') }}" method="POST" style="display:inline;">
+                    <input type="hidden" name ="photo_url" value="{{ photo }}">
+                    <button type="submit" onclick="return confirm('Delete this photo?');">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+            <p>No photos uploaded.</p>
+    {% endif %}
+
+</body>
+</html>

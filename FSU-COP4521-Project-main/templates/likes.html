@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Likes You've Received</title>
+</head>
+<body>
+    <h1>People Who Like You</h1>
+    {% if likes %}
+        <ul>
+        {% for like in likes %}
+            <li>
+                <div style="margin-bottom: 20px;">
+                    <strong>{{ like.first_name.capitalize() }}</strong> ({{ like.age }} yrs, {{ like.gender.capitalize()}}, {{ like.orientation.capitalize() }})<br>
+                    {% if like.message %}
+                        <p><em>"{{ like.message }}"</em></p>
+                    {% endif %}
+                    <a href="{{ url_for('viewProfile', userId=like.user_id, source='likes') }}">View Profile</a>
+
+                    <form method="POST" action="{{ url_for('handleLikeResponse') }}">
+                        <input type="hidden" name="liker_id" value="{{ like.user_id }}">
+                        <button type="submit" name="action" value="match">Match</button>
+                        <button type="submit" name="action" value="pass">Pass</button>
+                    </form>
+
+                    <button type="button" onclick="toggleReportForm({{ like.user_id }})">Report</button>
+                    <form id="report-form-{{ like.user_id }}" action="/report_user" method="POST" style="display:none; margin-top: 10px;">
+                        <input type="hidden" name="reported_id" value="{{ like.user_id }}">
+                        <input type="hidden" name="source_page" value="likes">
+                        <input type="text" name="reason" placeholder="Reason for report" required>
+                        <button type="submit">Submit Report</button>
+                    </form>
+
+                    <form action="/block_user" method="POST" style="display:inline;">
+                        <input type="hidden" name="blocked_id" value="{{ like.user_id }}">
+                        <input type="hidden" name="source_page" value="likes">
+                        <button type="submit">Block</button>
+                    </form>    
+
+                </div>
+            </li>
+            <hr>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No likes yet!</p>
+    {% endif %}
+    <br>
+    <a href="/">Back to Home</a>
+
+    <!-- AI PROVIDED -->
+    <script>
+        function toggleReportForm(userId)
+        {
+            const form = document.getElementById("report-form-" + userId);
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>

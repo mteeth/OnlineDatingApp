@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browsing</title>
+</head>
+<body>
+    <h1>Browse Profiles</h1>
+    {% if profile %}
+        <h2>{{ profile.first_name.capitalize() }}</h2>
+
+        <p><strong>Age:</strong> {{ profile.age }}</p>
+
+        <p><strong>Gender:</strong> {{ profile.gender.capitalize() }}</p>
+
+        {% if profile.orientation %}
+        <p><strong>Orientation:</strong> {{ profile.orientation.capitalize() }}</p>
+        {% endif %}
+
+        {% if profile.bio %}
+            <p><strong>Bio:</strong> {{ profile.bio }}</p>
+        {% endif %}
+
+        {% if profile.interests %}
+        <p><strong>Interests:</strong>
+            {{ profile.interests.replace(",", ", ") }}
+        </p>
+        {% endif %}    
+
+        <h2>Photos</h2>
+        {% if profile.photos %}
+            {% for photo in profile.photos %}
+                <img src="{{ url_for('uploadedFile', filename=photo) }}" width="200">
+            {% endfor %}
+        {% else %}
+            <p>No photos uploaded.</p>
+        {% endif %}
+
+        <br><br>
+
+
+        {% if not guest %}
+        <form method="POST">
+            <input type="hidden" name="liked_id" value="{{ profile.id }}">
+            <textarea name="message" placeholder="Optional message..."></textarea><br>
+            <button name="action" value="like">Like</button>
+        </form>
+
+
+       <form method="POST" action="{{ url_for('pass_user', user_id=profile.id) }}">
+            <input type="hidden" name="passed_id" value="{{ profile.id }}">
+            <button type="submit">Pass</button>
+        </form>
+
+        <button type="button" onclick="toggleReportForm({{ profile.id }})">Report</button>
+        <form id="report-form-{{ profile.id }}" action="/report_user" method="POST" style="display:none; margin-top: 10px;">
+            <input type="hidden" name="reported_id" value="{{ profile.id }}">
+            <input type="hidden" name="source_page" value="browse">
+            <input type="text" name="reason" placeholder="Reason for report" required>
+            <button type="submit">Submit Report</button>
+        </form>
+
+        <form action="/block_user" method="POST" style="display:inline;">
+            <input type="hidden" name="blocked_id" value="{{ profile.id }}">
+            <input type="hidden" name="source_page" value="browse">
+            <button type="submit">Block</button>
+        </form>
+        {% endif %}
+
+    {% else %}
+        <p>No more profiles to browse!</p>
+        <form method="POST" action="{{ url_for('refresh_browse') }}">
+            <button type="submit">Refresh Available Matches</button>
+        </form>
+    {% endif %}
+
+    <br><br>
+    <a href="/">Return to Home</a>
+
+    <!-- AI PROVIDED -->
+    <script>
+        function toggleReportForm(userId)
+        {
+            const form = document.getElementById("report-form-" + userId);
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
+</body>
+</html>

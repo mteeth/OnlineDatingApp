@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user.first_name.capitalize() }}'s Profile</title>
+</head>
+<body>
+    <h1>{{ user.first_name.capitalize() }}'s Profile</h1>
+
+    <p><strong>Age:</strong> {{ user.age }}</p>
+    <p><strong>Gender:</strong> {{ user.gender.capitalize() }}</p>
+    
+    {% if user.orientation %}
+    <p><strong>Orientation:</strong> {{ user.orientation.capitalize() }}</p>
+    {% endif %}
+    
+    {% if user.bio %}
+    <p><strong>Bio:</strong> {{ user.bio }}</p>
+    {% endif %}
+    
+    {% if user.interests %}
+    <p><strong>Interests:</strong>
+        {{ user.interests.replace(",", ", ") }}
+    </p>
+    {% endif %}
+
+
+    <h2>Photos</h2>
+    {% if photos %}
+        {% for photo in photos %}
+            <img src="{{ url_for('uploadedFile', filename=photo) }}" width="200">
+        {% endfor %}
+    {% else %}
+        <p>No photos uploaded yet.</p>
+    {% endif %}
+
+    <br><br>
+    {% if source == "matches" %}
+        <a href="/matches">Back to Matches</a>
+    {% else %}    
+        <a href="/likes">Back to Likes</a>
+    {% endif %}
+</body>
+</html>

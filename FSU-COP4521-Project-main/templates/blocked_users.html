@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blocked Users</title>
+</head>
+<body>
+    <h1>Blocked Users</h1>
+
+    {% if blocked %}
+        <ul>
+            {% for user in blocked %}
+                <li>
+                    {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+                    <form action="{{ url_for('unblockUser') }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="blocked_id" value="{{ user.id }}">
+                        <button type="submit">Unblock</button>
+                    </form>
+
+                    <form action="{{ url_for('reportUser') }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="reported_id" value="{{ user.id }}">
+                        <input type="hidden" name="source_page" value="blocked_users">
+                        <input type="text" name="reason" placeholder="Reason for report" required>
+                        <button type="submit">Report</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have not blocked any users.</p>
+    {% endif %}
+
+    <br><a href="/">Return to Home</a>
+</body>
+</html>

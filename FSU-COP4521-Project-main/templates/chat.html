@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        /* CSS - AI PROVIDED */
+        #chat-box { height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .msg { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Chat with {{ partner.first_name }}</h2>
+    <div id="chat-box">
+        {% for msg in messages %}
+            <div class="msg"><strong>{{ 'You' if msg.sender_id == userId else partner.first_name }}:</strong> {{msg.content }}</div>
+        {% endfor %}
+    </div>
+
+    <form id="chat-form">
+        <input type="text" id="message" autocomplete="off" placeholder="Type a message..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <!-- JAVASCRIPT - AI PROVIDED-->
+    <script>
+        const socket = io()
+        const userId = {{ userId }};
+        const matchId = {{ matchId }};
+        const chatBox = document.getElementById("chat-box");
+
+        socket.emit("join_room", { match_id: matchId });
+
+        document.getElementById("chat-form").onsubmit = function(e)
+        {
+            e.preventDefault();
+            const msg = document.getElementById("message").value;
+            socket.emit("send_message", {sender_id: userId, match_id: matchId, content: msg});
+            document.getElementById("message").value = "";
+        };
+
+        socket.on("receive_message", function(data) {
+            const msgDiv = document.createElement("div");
+            msgDiv.classList.add("msg");
+            msgDiv.innerHTML = `<strong>${data.sender_name}:</strong> ${data.content}`;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        window.addEventListener("beforeunload", function() {
+            socket.emit("leave_chat", { match_id: matchId });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!-- templates/admin_messages.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - View Messages</title>
+</head>
+<body>
+    <h1>Messages for User #{{ targetUserId }}</h1>
+    <table border="1">
+        <tr>
+            <th>Sender</th>
+            <th>Receiver</th>
+            <th>Content</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for msg in messages %}
+        <tr>
+            <td>{{ msg.sender_name }}</td>
+            <td>{{ msg.receiver_name }}</td>
+            <td>{{ msg.content }}</td>
+            <td>{{ msg.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/admin/dashboard">Back to Dashboard</a>
+</body>
+</html>

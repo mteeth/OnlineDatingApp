@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ user.first_name.capitalize() }}'s Profile</title>
+</head>
+<body>
+    <h1>Welcome, {{ user.first_name.capitalize() }}</h1>
+
+    <p><strong>Age:</strong> {{ user.age }}</p>
+    <p><strong>Gender:</strong> {{ user.gender.capitalize() }}</p>
+    
+    {% if user.orientation %}
+    <p><strong>Orientation:</strong> {{ user.orientation.capitalize() }}</p>
+    {% endif %}
+    
+    {% if user.bio %}
+    <p><strong>Bio:</strong> {{ user.bio }}</p>
+    {% endif %}
+    
+    {% if user.interests %}
+    <p><strong>Interests:</strong>
+        {{ user.interests.replace(",", ", ") }}
+    </p>
+    {% endif %}
+
+    <h2>Photos</h2>
+    {% if photos %}
+        {% for photo in photos %}
+            <img src="{{ url_for('uploadedFile', filename=photo) }}" width="200">
+        {% endfor %}
+    {% else %}
+        <p>No photos uploaded yet.</p>
+    {% endif %}
+
+    <br><br>
+
+    <a href="/edit_profile/{{ user.id }}">Edit Profile</a>
+
+    <br><br>
+    <a href="/">Return to Home</a>
+
+    <br><br>
+    {% if session['role'] != 'guest' %}
+    <form action="{{ url_for('delete_profile') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your profile?');">
+        <button type="submit">Delete My Profile</button>
+    </form>
+    {% endif %}
+</body>
+</html>
