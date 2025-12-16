@@ -1,4 +1,4 @@
-n online dating web application that makes use of front-end and back-end libraries
+An online dating web application that makes use of front-end and back-end libraries
 
 A lack of simple and completely free ways to meet and connect with other people. A lot of dating platforms have a lot of features hidden behind paywalls. Ours is entirely free and we show users other users based similar interests. We also take users ages into account when showing potential matches, so they're more likely to connect with someone in a similar stage of life.
 
